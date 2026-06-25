@@ -1,0 +1,5 @@
+# Dependências Python para SalvaAmbuDS
+# O servidor usa apenas http.server da stdlib Python.
+# requests é usado pelos provedores de IA no server.py.
+
+requests>=2.31.0

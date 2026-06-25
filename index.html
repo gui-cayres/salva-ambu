@@ -1,0 +1,1903 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <meta name="description" content="Prontuário IA V2 — Sistema avançado de geração de prontuários médicos com IA. Ferramenta profissional para médicos com templates especializados e calculadoras médicas.">
+  <meta name="keywords" content="prontuário médico, IA médica, software médico, telemedicina, saúde digital, ferramentas médicas">
+  <meta name="author" content="Salvador Medical Tech">
+  <meta name="theme-color" content="#1e40af">
+  <meta property="og:title" content="Prontuário IA V2 — Sistema Profissional de Prontuários Médicos">
+  <meta property="og:description" content="Gere prontuários médicos completos em segundos com IA. Ferramentas especializadas para todas as especialidades médicas.">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="pt_BR">
+
+  <title>Prontuário IA V2 | Sistema Profissional de Prontuários Médicos com IA</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🩺</text></svg>">
+  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🩺</text></svg>">
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            'sans': ['Inter', 'system-ui', 'sans-serif'],
+            'mono': ['JetBrains Mono', 'Courier New', 'monospace'],
+          },
+          animation: {
+            'fade-in': 'fadeIn 0.5s ease-in-out',
+            'slide-up': 'slideUp 0.3s ease-out',
+            'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            'float': 'float 3s ease-in-out infinite',
+          },
+          keyframes: {
+            fadeIn: {
+              '0%': { opacity: '0' },
+              '100%': { opacity: '1' },
+            },
+            slideUp: {
+              '0%': { transform: 'translateY(10px)', opacity: '0' },
+              '100%': { transform: 'translateY(0)', opacity: '1' },
+            },
+            float: {
+              '0%, 100%': { transform: 'translateY(0)' },
+              '50%': { transform: 'translateY(-5px)' },
+            }
+          },
+          colors: {
+            'medical-blue': {
+              50: '#eff6ff',
+              100: '#dbeafe',
+              200: '#bfdbfe',
+              300: '#93c5fd',
+              400: '#60a5fa',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+              800: '#1e40af',
+              900: '#1e3a8a',
+              950: '#172554',
+            },
+            'medical-teal': {
+              50: '#f0fdfa',
+              100: '#ccfbf1',
+              200: '#99f6e4',
+              300: '#5eead4',
+              400: '#2dd4bf',
+              500: '#14b8a6',
+              600: '#0d9488',
+              700: '#0f766e',
+              800: '#115e59',
+              900: '#134e4a',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary-gradient: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+      --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+      --modal-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+    }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    #resultadoProntuario {
+      font-family: 'JetBrains Mono', 'Courier New', monospace;
+      white-space: pre-wrap;
+      background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+    }
+
+    .dot-pulse {
+      animation: pulse 1.8s infinite;
+      background: linear-gradient(90deg, #3b82f6, #60a5fa);
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.95); }
+    }
+
+    .bar-inner {
+      transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      background: linear-gradient(90deg, #3b82f6, #60a5fa, #93c5fd);
+      background-size: 200% 100%;
+      animation: shimmer 2s infinite;
+    }
+
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+
+    :focus-visible {
+      outline: 2px solid #3b82f6 !important;
+      outline-offset: 2px;
+      border-radius: 6px;
+      box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+    }
+
+    /* Modais melhorados */
+    .modal {
+      display: none;
+      backdrop-filter: blur(8px);
+      background: rgba(0, 0, 0, 0.5);
+    }
+
+    .modal.aberto {
+      display: flex;
+      animation: fadeIn 0.3s ease-out;
+    }
+
+    .modal-content {
+      animation: slideUp 0.3s ease-out;
+      box-shadow: var(--modal-shadow);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    /* Cards com gradiente sutil */
+    .card-gradient {
+      background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+      border: 1px solid rgba(226, 232, 240, 0.8);
+    }
+
+    .card-gradient:hover {
+      border-color: #3b82f6;
+      transform: translateY(-2px);
+      transition: all 0.2s ease;
+    }
+
+    /* Botões com gradiente */
+    .btn-gradient {
+      background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+      color: white;
+      transition: all 0.2s ease;
+    }
+
+    .btn-gradient:hover {
+      background: linear-gradient(135deg, #2563eb 0%, #1e3a8a 100%);
+      transform: translateY(-1px);
+      box-shadow: 0 10px 20px -10px rgba(59, 130, 246, 0.5);
+    }
+
+    /* Modo Escuro */
+    .dark .card-gradient {
+      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+      border-color: rgba(51, 65, 85, 0.8);
+    }
+
+    .dark .text-gray-900 {
+      color: #f1f5f9;
+    }
+
+    .dark .text-gray-700 {
+      color: #cbd5e1;
+    }
+
+    .dark .text-gray-600 {
+      color: #94a3b8;
+    }
+
+    .dark .text-gray-500 {
+      color: #64748b;
+    }
+
+    .dark .border-gray-200 {
+      border-color: #334155;
+    }
+
+    .dark .border-gray-300 {
+      border-color: #475569;
+    }
+
+    .dark .bg-white {
+      background-color: #1e293b;
+    }
+
+    .dark .bg-gray-50 {
+      background-color: #0f172a;
+    }
+
+    .dark .bg-gray-100 {
+      background-color: #1e293b;
+    }
+
+    .dark .hover\:bg-gray-50:hover {
+      background-color: #0f172a;
+    }
+
+    .dark .bg-blue-50 {
+      background-color: #1e3a8a;
+    }
+
+    .dark .bg-indigo-50 {
+      background-color: #312e81;
+    }
+
+    .dark .bg-violet-50 {
+      background-color: #4c1d95;
+    }
+
+    .dark .bg-green-50 {
+      background-color: #064e3b;
+    }
+
+    .dark .bg-amber-50 {
+      background-color: #78350f;
+    }
+
+    .dark .bg-emerald-50 {
+      background-color: #064e3b;
+    }
+
+    .dark .bg-rose-50 {
+      background-color: #881337;
+    }
+
+    .dark .border-blue-100 {
+      border-color: #1e3a8a;
+    }
+
+    .dark .border-indigo-100 {
+      border-color: #312e81;
+    }
+
+    .dark .border-violet-100 {
+      border-color: #4c1d95;
+    }
+
+    .dark .border-green-100 {
+      border-color: #064e3b;
+    }
+
+    .dark .border-amber-100 {
+      border-color: #78350f;
+    }
+
+    .dark .border-emerald-100 {
+      border-color: #064e3b;
+    }
+
+    .dark .border-rose-100 {
+      border-color: #881337;
+    }
+
+    .dark .text-blue-800 {
+      color: #dbeafe;
+    }
+
+    .dark .text-indigo-800 {
+      color: #e0e7ff;
+    }
+
+    .dark .text-violet-800 {
+      color: #ede9fe;
+    }
+
+    .dark .text-green-800 {
+      color: #d1fae5;
+    }
+
+    .dark .text-amber-800 {
+      color: #fef3c7;
+    }
+
+    .dark .text-emerald-700 {
+      color: #a7f3d0;
+    }
+
+    .dark .text-rose-700 {
+      color: #fecdd3;
+    }
+
+    .dark .from-blue-50 {
+      --tw-gradient-from: #1e3a8a var(--tw-gradient-from-position);
+      --tw-gradient-to: rgba(30, 58, 138, 0) var(--tw-gradient-to-position);
+      --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+    }
+
+    .dark .to-white {
+      --tw-gradient-to: #1e293b var(--tw-gradient-to-position);
+    }
+
+    .dark .from-indigo-50 {
+      --tw-gradient-from: #312e81 var(--tw-gradient-from-position);
+    }
+
+    .dark .from-violet-50 {
+      --tw-gradient-from: #4c1d95 var(--tw-gradient-from-position);
+    }
+
+    .dark .from-green-50 {
+      --tw-gradient-from: #064e3b var(--tw-gradient-from-position);
+    }
+
+    .dark .from-amber-50 {
+      --tw-gradient-from: #78350f var(--tw-gradient-from-position);
+    }
+
+    .dark .hover\:from-blue-100:hover {
+      --tw-gradient-from: #1e40af var(--tw-gradient-from-position);
+    }
+
+    .dark .hover\:to-blue-50:hover {
+      --tw-gradient-to: #1e3a8a var(--tw-gradient-to-position);
+    }
+
+    .dark .hover\:from-indigo-100:hover {
+      --tw-gradient-from: #3730a3 var(--tw-gradient-from-position);
+    }
+
+    .dark .hover\:to-indigo-50:hover {
+      --tw-gradient-to: #312e81 var(--tw-gradient-to-position);
+    }
+
+    .dark .hover\:from-violet-100:hover {
+      --tw-gradient-from: #5b21b6 var(--tw-gradient-from-position);
+    }
+
+    .dark .hover\:to-violet-50:hover {
+      --tw-gradient-to: #4c1d95 var(--tw-gradient-to-position);
+    }
+
+    .dark .hover\:from-green-100:hover {
+      --tw-gradient-from: #065f46 var(--tw-gradient-from-position);
+    }
+
+    .dark .hover\:to-green-50:hover {
+      --tw-gradient-to: #064e3b var(--tw-gradient-to-position);
+    }
+
+    .dark .hover\:from-amber-100:hover {
+      --tw-gradient-from: #92400e var(--tw-gradient-from-position);
+    }
+
+    .dark .hover\:to-amber-50:hover {
+      --tw-gradient-to: #78350f var(--tw-gradient-to-position);
+    }
+
+    /* Cores específicas para ferramentas rápidas no modo escuro */
+    .dark .bg-blue-100 {
+      background-color: #1e40af;
+    }
+
+    .dark .bg-indigo-100 {
+      background-color: #3730a3;
+    }
+
+    .dark .bg-violet-100 {
+      background-color: #5b21b6;
+    }
+
+    .dark .bg-green-100 {
+      background-color: #065f46;
+    }
+
+    .dark .bg-amber-100 {
+      background-color: #92400e;
+    }
+
+    .dark .hover\:bg-blue-200:hover {
+      background-color: #1e3a8a;
+    }
+
+    .dark .hover\:bg-indigo-200:hover {
+      background-color: #312e81;
+    }
+
+    .dark .hover\:bg-violet-200:hover {
+      background-color: #4c1d95;
+    }
+
+    .dark .hover\:bg-green-200:hover {
+      background-color: #064e3b;
+    }
+
+    .dark .hover\:bg-amber-200:hover {
+      background-color: #78350f;
+    }
+
+    /* Cores de texto para botões nos modais */
+    .dark .text-blue-800 {
+      color: #dbeafe;
+    }
+
+    .dark .text-indigo-800 {
+      color: #e0e7ff;
+    }
+
+    .dark .text-violet-800 {
+      color: #ede9fe;
+    }
+
+    .dark .text-green-800 {
+      color: #d1fae5;
+    }
+
+    .dark .text-amber-800 {
+      color: #fef3c7;
+    }
+
+    /* Cores de título nos modais */
+    .dark .text-blue-900 {
+      color: #dbeafe;
+    }
+
+    .dark .text-indigo-900 {
+      color: #e0e7ff;
+    }
+
+    .dark .text-violet-900 {
+      color: #ede9fe;
+    }
+
+    .dark .text-green-900 {
+      color: #d1fae5;
+    }
+
+    .dark .text-amber-900 {
+      color: #fef3c7;
+    }
+
+    /* Inputs no modo escuro */
+    .dark input {
+      background-color: #334155;
+      border-color: #475569;
+      color: #f1f5f9;
+    }
+
+    .dark input::placeholder {
+      color: #94a3b8;
+    }
+
+    /* Modal background no modo escuro */
+    .dark .modal {
+      background: rgba(0, 0, 0, 0.7);
+    }
+
+    .dark .modal .bg-white {
+      background-color: #1e293b;
+      color: #f1f5f9;
+    }
+
+    /* Texto dentro dos modais */
+    .dark .text-gray-800 {
+      color: #cbd5e1;
+    }
+
+    .dark .text-gray-600 {
+      color: #94a3b8;
+    }
+
+    .dark .text-gray-700 {
+      color: #cbd5e1;
+    }
+
+    /* Bordas nos modais */
+    .dark .border-gray-200 {
+      border-color: #334155;
+    }
+
+    .dark .border-gray-300 {
+      border-color: #475569;
+    }
+
+    /* Hover states */
+    .dark .hover\:text-gray-700:hover {
+      color: #cbd5e1;
+    }
+
+    .dark .hover\:bg-gray-50:hover {
+      background-color: #0f172a;
+    }
+
+    /* Header com gradiente */
+    .header-gradient {
+      background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+      box-shadow: 0 4px 20px rgba(30, 64, 175, 0.2);
+    }
+
+    /* MODO ESCURO PROFISSIONAL */
+    body.dark {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      color: #e2e8f0;
+    }
+
+    body.dark .card-gradient {
+      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+      border-color: rgba(51, 65, 85, 0.8);
+    }
+
+    body.dark .header-gradient {
+      background: linear-gradient(135deg, #0c1a2e 0%, #1e3a8a 100%);
+    }
+
+    body.dark #resultadoProntuario {
+      background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+      color: #cbd5e1;
+      border-color: #334155;
+    }
+
+    body.dark input,
+    body.dark textarea,
+    body.dark select {
+      background: rgba(15, 23, 42, 0.7) !important;
+      color: #e2e8f0 !important;
+      border-color: #475569 !important;
+    }
+
+    body.dark input:focus,
+    body.dark textarea:focus,
+    body.dark select:focus {
+      border-color: #3b82f6 !important;
+      background: rgba(15, 23, 42, 0.9) !important;
+    }
+
+    /* Scrollbar personalizada */
+    ::-webkit-scrollbar {
+      width: 10px;
+      height: 10px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #f1f5f9;
+      border-radius: 5px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(135deg, #cbd5e1, #94a3b8);
+      border-radius: 5px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: linear-gradient(135deg, #94a3b8, #64748b);
+    }
+
+    body.dark ::-webkit-scrollbar-track {
+      background: #1e293b;
+    }
+
+    body.dark ::-webkit-scrollbar-thumb {
+      background: linear-gradient(135deg, #475569, #334155);
+    }
+
+    body.dark ::-webkit-scrollbar-thumb:hover {
+      background: linear-gradient(135deg, #334155, #1e293b);
+    }
+
+    /* Animações de entrada */
+    .animate-fade-in {
+      animation: fadeIn 0.5s ease-out;
+    }
+
+    .animate-slide-up {
+      animation: slideUp 0.3s ease-out;
+    }
+
+    /* Tooltips */
+    [data-tooltip] {
+      position: relative;
+    }
+
+    [data-tooltip]:before {
+      content: attr(data-tooltip);
+      position: absolute;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 6px 12px;
+      background: #1e293b;
+      color: white;
+      font-size: 12px;
+      border-radius: 4px;
+      white-space: nowrap;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.2s ease;
+      z-index: 1000;
+      margin-bottom: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    [data-tooltip]:hover:before {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* Loading states */
+    .loading-shimmer {
+      background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+    }
+
+    body.dark .loading-shimmer {
+      background: linear-gradient(90deg, #1e293b 25%, #334155 50%, #1e293b 75%);
+    }
+
+    /* Cores de borda para hover nos botões das ferramentas rápidas */
+    .dark .hover\:border-blue-300:hover {
+      border-color: #1d4ed8;
+    }
+
+    .dark .hover\:border-indigo-300:hover {
+      border-color: #4f46e5;
+    }
+
+    .dark .hover\:border-violet-300:hover {
+      border-color: #7c3aed;
+    }
+
+    .dark .hover\:border-green-300:hover {
+      border-color: #10b981;
+    }
+
+    .dark .hover\:border-amber-300:hover {
+      border-color: #f59e0b;
+    }
+
+    /* Cores de texto para os botões das ferramentas rápidas */
+    .dark .font-semibold.text-gray-900 {
+      color: #f1f5f9;
+    }
+
+    .dark .text-gray-500 {
+      color: #94a3b8;
+    }
+
+    /* Garantir que os textos dentro dos cards sejam legíveis */
+    .dark .text-gray-800 {
+      color: #cbd5e1;
+    }
+
+    .dark .text-gray-700 {
+      color: #cbd5e1;
+    }
+
+    .dark .text-gray-600 {
+      color: #94a3b8;
+    }
+
+    /* Overrides específicos para botões das ferramentas rápidas */
+    .dark .hover\:from-blue-100:hover {
+      --tw-gradient-from: #1e40af var(--tw-gradient-from-position);
+    }
+
+    .dark .hover\:to-blue-50:hover {
+      --tw-gradient-to: #1e3a8a var(--tw-gradient-to-position);
+    }
+
+    .dark .hover\:from-indigo-100:hover {
+      --tw-gradient-from: #3730a3 var(--tw-gradient-from-position);
+    }
+
+    .dark .hover\:to-indigo-50:hover {
+      --tw-gradient-to: #312e81 var(--tw-gradient-to-position);
+    }
+
+    .dark .hover\:from-violet-100:hover {
+      --tw-gradient-from: #5b21b6 var(--tw-gradient-from-position);
+    }
+
+    .dark .hover\:to-violet-50:hover {
+      --tw-gradient-to: #4c1d95 var(--tw-gradient-to-position);
+    }
+
+    .dark .hover\:from-green-100:hover {
+      --tw-gradient-from: #065f46 var(--tw-gradient-from-position);
+    }
+
+    .dark .hover\:to-green-50:hover {
+      --tw-gradient-to: #064e3b var(--tw-gradient-to-position);
+    }
+
+    .dark .hover\:from-amber-100:hover {
+      --tw-gradient-from: #92400e var(--tw-gradient-from-position);
+    }
+
+    .dark .hover\:to-amber-50:hover {
+      --tw-gradient-to: #78350f var(--tw-gradient-to-position);
+    }
+
+    /* Cores de borda para hover */
+    .dark .hover\:border-blue-300:hover {
+      border-color: #1d4ed8;
+    }
+
+    .dark .hover\:border-indigo-300:hover {
+      border-color: #4f46e5;
+    }
+
+    .dark .hover\:border-violet-300:hover {
+      border-color: #7c3aed;
+    }
+
+    .dark .hover\:border-green-300:hover {
+      border-color: #10b981;
+    }
+
+    .dark .hover\:border-amber-300:hover {
+      border-color: #f59e0b;
+    }
+
+    /* Estilos para o painel lateral no modo escuro */
+    .dark #painelFerramentas {
+      background-color: #1e293b;
+      border-color: #334155;
+    }
+
+    .dark #painelFerramentas .bg-gradient-to-r.from-blue-50.to-white {
+      background: linear-gradient(to right, #1e3a8a, #1e293b);
+      border-color: #334155;
+    }
+
+    .dark #painelFerramentas .bg-gray-50 {
+      background-color: #0f172a;
+      border-color: #334155;
+    }
+
+    .dark #painelFerramentas .bg-gray-100 {
+      background-color: #1e293b;
+    }
+
+    .dark #painelFerramentas .text-gray-900 {
+      color: #f1f5f9;
+    }
+
+    .dark #painelFerramentas .text-gray-500 {
+      color: #94a3b8;
+    }
+
+    .dark #painelFerramentas .text-gray-600 {
+      color: #94a3b8;
+    }
+
+    .dark #painelFerramentas .text-gray-700 {
+      color: #cbd5e1;
+    }
+
+    .dark #painelFerramentas .border-gray-200 {
+      border-color: #334155;
+    }
+
+    .dark #painelFerramentas .hover\:bg-gray-100:hover {
+      background-color: #1e293b;
+    }
+
+    .dark #painelFerramentas .text-gray-400 {
+      color: #64748b;
+    }
+
+    /* Cores dos itens de lista no painel */
+    .dark #painelFerramentas .bg-blue-50 {
+      background-color: #1e3a8a;
+      border-color: #1e40af;
+    }
+
+    .dark #painelFerramentas .bg-indigo-50 {
+      background-color: #312e81;
+      border-color: #3730a3;
+    }
+
+    .dark #painelFerramentas .bg-violet-50 {
+      background-color: #4c1d95;
+      border-color: #5b21b6;
+    }
+
+    .dark #painelFerramentas .bg-green-50 {
+      background-color: #064e3b;
+      border-color: #065f46;
+    }
+
+    .dark #painelFerramentas .bg-amber-50 {
+      background-color: #78350f;
+      border-color: #92400e;
+    }
+
+    .dark #painelFerramentas .border-blue-100 {
+      border-color: #1e40af;
+    }
+
+    .dark #painelFerramentas .border-indigo-100 {
+      border-color: #3730a3;
+    }
+
+    .dark #painelFerramentas .border-violet-100 {
+      border-color: #5b21b6;
+    }
+
+    .dark #painelFerramentas .border-green-100 {
+      border-color: #065f46;
+    }
+
+    .dark #painelFerramentas .border-amber-100 {
+      border-color: #92400e;
+    }
+
+    /* ── Print: show only the certificate, hide everything else ── */
+    @media print {
+      body > *:not(#printArea) { display: none !important; }
+      #printArea {
+        display: block !important;
+        position: fixed;
+        inset: 0;
+        background: white;
+        z-index: 9999;
+        padding: 40px 60px;
+        font-family: 'Times New Roman', serif;
+        font-size: 12pt;
+        color: #000;
+        line-height: 1.7;
+      }
+      #printArea h1 { font-size: 14pt; text-align: center; margin-bottom: 4px; }
+      #printArea .print-center { text-align: center; }
+      #printArea .print-signature { margin-top: 60px; border-top: 1px solid #000; width: 280px; }
+    }
+  </style>
+</head>
+<body class="min-h-screen animate-fade-in">
+<div id="printArea" style="display:none"></div>
+
+<!-- HEADER PROFISSIONAL -->
+<header class="header-gradient text-white shadow-xl sticky top-0 z-50 backdrop-blur-lg bg-opacity-90">
+  <div class="max-w-6xl mx-auto px-6 py-4">
+    <div class="flex items-center justify-between">
+      <div class="flex items-center gap-4">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center backdrop-blur-sm">
+            <span class="text-xl">🩺</span>
+          </div>
+          <div>
+            <h1 class="text-lg font-bold tracking-tight">Prontuário IA <span class="text-cyan-300">V2</span></h1>
+            <div class="flex items-center gap-3 mt-1">
+              <span id="chipIA" class="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1 rounded-full bg-white/10 backdrop-blur-sm border border-white/20">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span class="text-white/90">Conectado</span>
+              </span>
+              <span class="text-xs text-white/70 flex items-center gap-1">
+                <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                </svg>
+                Prontuário Médico
+              </span>
+              <span class="text-xs text-white/70">•</span>
+              <span class="text-xs text-white/70">Processamento Local</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <div class="bg-white/10 backdrop-blur-sm rounded-xl px-4 py-2 border border-white/20">
+          <div class="flex items-center gap-2">
+            <svg class="w-4 h-4 text-white/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            <span id="cronometroDisplay" class="font-mono font-bold text-white text-sm tracking-wider">00:00:00</span>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <button id="btnDarkMode"
+                  class="w-10 h-10 rounded-xl bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/20 flex items-center justify-center transition-all duration-200 hover:scale-105 active:scale-95"
+                  data-tooltip="Alternar tema">
+            <span class="text-lg">🌙</span>
+          </button>
+
+          <button id="btnIniciarCrono"
+                  class="px-4 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-medium text-sm flex items-center gap-2 transition-all duration-200 hover:scale-105 active:scale-95 shadow-lg shadow-emerald-500/25">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            Iniciar
+          </button>
+
+          <button id="btnPararCrono"
+                  class="px-4 py-2.5 rounded-xl bg-rose-500 hover:bg-rose-600 text-white font-medium text-sm flex items-center gap-2 transition-all duration-200 hover:scale-105 active:scale-95 shadow-lg shadow-rose-500/25">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 10a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z"/>
+            </svg>
+            Parar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="max-w-6xl mx-auto px-6 py-8 space-y-6 animate-slide-up">
+
+  <!-- Dados do Paciente - Card Moderno -->
+  <div class="card-gradient rounded-2xl shadow-xl p-6 border border-gray-100/50 transition-all duration-300 hover:shadow-2xl">
+    <div class="flex items-center justify-between mb-6">
+      <div class="flex items-center gap-3">
+        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-400 flex items-center justify-center shadow-lg">
+          <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+          </svg>
+        </div>
+        <div>
+          <h2 class="text-xl font-bold text-gray-900">Dados do Paciente</h2>
+          <p class="text-sm text-gray-500 mt-1">Informações básicas para identificação</p>
+        </div>
+      </div>
+      <div class="text-xs font-medium px-3 py-1.5 rounded-full bg-blue-50 text-blue-700 border border-blue-100">
+        <span class="flex items-center gap-1.5">
+          <span class="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse"></span>
+          Obrigatório
+        </span>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+      <div class="space-y-2">
+        <label class="text-sm font-medium text-gray-700 flex items-center gap-1.5">
+          <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+          </svg>
+          Nome completo
+        </label>
+        <input id="nomePaciente" type="text" placeholder="Ex: Maria da Silva Santos"
+          class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all duration-200 bg-white/50"/>
+      </div>
+
+      <div class="space-y-2">
+        <label class="text-sm font-medium text-gray-700 flex items-center gap-1.5">
+          <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+          Idade
+        </label>
+        <input id="idadePaciente" type="text" placeholder="Ex: 45 anos"
+          class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all duration-200 bg-white/50"/>
+      </div>
+
+      <div class="space-y-2">
+        <label class="text-sm font-medium text-gray-700 flex items-center gap-1.5">
+          <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+          </svg>
+          Sexo
+        </label>
+        <input id="sexoPaciente" type="text" placeholder="Ex: Feminino / Masculino"
+          class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all duration-200 bg-white/50"/>
+      </div>
+
+      <div class="space-y-2">
+        <label class="text-sm font-medium text-gray-700 flex items-center gap-1.5">
+          <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+          </svg>
+          Profissão
+        </label>
+        <input id="profissaoPaciente" type="text" placeholder="Ex: Professora, Engenheiro"
+          class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all duration-200 bg-white/50"/>
+      </div>
+
+      <div class="space-y-2">
+        <label class="text-sm font-medium text-gray-700 flex items-center gap-1.5">
+          <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+          </svg>
+          Residência atual
+        </label>
+        <input id="naturalidadePaciente" type="text" placeholder="Ex: Salvador/BA"
+          class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all duration-200 bg-white/50"/>
+      </div>
+
+      <div class="space-y-2">
+        <label class="text-sm font-medium text-gray-700 flex items-center gap-1.5">
+          <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+          Queixa Principal
+        </label>
+        <input id="queixaPrincipal" type="text" placeholder="Ex: Dor abdominal há 3 dias"
+          class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all duration-200 bg-white/50"/>
+      </div>
+    </div>
+  </div>
+
+  <!-- Especialidade e Template - Card Moderno -->
+  <div class="card-gradient rounded-2xl shadow-xl p-6 border border-gray-100/50 transition-all duration-300 hover:shadow-2xl">
+    <div class="flex items-center justify-between mb-6">
+      <div class="flex items-center gap-3">
+        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-pink-400 flex items-center justify-center shadow-lg">
+          <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+          </svg>
+        </div>
+        <div>
+          <h2 class="text-xl font-bold text-gray-900">Especialidade & Template</h2>
+          <p class="text-sm text-gray-500 mt-1">Selecione a especialidade e modelo de prontuário</p>
+        </div>
+      </div>
+      <div class="text-xs font-medium px-3 py-1.5 rounded-full bg-purple-50 text-purple-700 border border-purple-100">
+        <span class="flex items-center gap-1.5">
+          <span class="w-1.5 h-1.5 rounded-full bg-purple-500 animate-pulse"></span>
+          Configuração
+        </span>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div class="space-y-2">
+        <label class="text-sm font-medium text-gray-700 flex items-center gap-1.5">
+          <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+          </svg>
+          Especialidade
+        </label>
+        <select id="especialidade" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all duration-200 bg-white/50 appearance-none">
+          <option value="">Selecione uma especialidade...</option>
+          <option value="cardiologia">Cardiologia</option>
+          <option value="pediatria">Pediatria</option>
+          <option value="clinica_geral">Clínica Geral</option>
+          <option value="ortopedia">Ortopedia</option>
+          <option value="ginecologia">Ginecologia</option>
+          <option value="neurologia">Neurologia</option>
+          <option value="psiquiatria">Psiquiatria</option>
+          <option value="dermatologia">Dermatologia</option>
+          <option value="emergencia">Emergência</option>
+          <option value="soap" selected>SOAP (Padrão)</option>
+        </select>
+      </div>
+
+      <div class="space-y-2">
+        <label class="text-sm font-medium text-gray-700 flex items-center gap-1.5">
+          <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+          </svg>
+          Template
+        </label>
+        <select id="templateSelecionado" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all duration-200 bg-white/50 appearance-none">
+          <option value="">Carregando templates disponíveis...</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Anamnese - Card Moderno -->
+  <div class="card-gradient rounded-2xl shadow-xl p-6 border border-gray-100/50 transition-all duration-300 hover:shadow-2xl">
+    <div class="flex items-center justify-between mb-6">
+      <div class="flex items-center gap-3">
+        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-400 flex items-center justify-center shadow-lg">
+          <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+          </svg>
+        </div>
+        <div>
+          <h2 class="text-xl font-bold text-gray-900">Anamnese</h2>
+          <p class="text-sm text-gray-500 mt-1">História da doença atual (HDA) — descreva o quadro em detalhes</p>
+        </div>
+      </div>
+      <div class="text-xs font-medium px-3 py-1.5 rounded-full bg-cyan-50 text-cyan-700 border border-cyan-100">
+        <span class="flex items-center gap-1.5">
+          <span class="w-1.5 h-1.5 rounded-full bg-cyan-500 animate-pulse"></span>
+          Detalhado
+        </span>
+      </div>
+    </div>
+
+    <textarea id="anamnese" rows="8" placeholder="Descreva a história da doença atual (HDA): início, duração, características da queixa, fatores de melhora/piora, sintomas associados e evolução do quadro..."
+      class="w-full border border-gray-200 rounded-xl px-4 py-4 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent transition-all duration-200 bg-white/50 resize-none"></textarea>
+
+    <!-- Container para instruções do template -->
+    <div id="templateInstructions" class="mt-4 p-4 bg-blue-50 border border-blue-100 rounded-xl text-sm text-blue-800 hidden">
+      <div class="font-medium mb-1 flex items-center gap-2">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+        Instruções do Template
+      </div>
+      <div id="templateInstructionsContent" class="text-blue-800">
+        Selecione uma especialidade e template para ver as instruções específicas.
+      </div>
+    </div>
+
+    <div class="flex items-center justify-between mt-4 pt-4 border-t border-gray-100">
+      <div class="text-xs font-medium text-gray-600">
+        <span id="contadorAnamnese">0</span> caracteres
+      </div>
+    </div>
+  </div>
+
+
+     <!-- Histórico Clínico - Card Moderno -->
+  <div class="card-gradient rounded-2xl shadow-xl p-6 border border-gray-100/50 transition-all duration-300 hover:shadow-2xl">
+    <div class="flex items-center justify-between mb-6">
+      <div class="flex items-center gap-3">
+        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-500 to-orange-400 flex items-center justify-center shadow-lg">
+          <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+          </svg>
+        </div>
+        <div>
+          <h2 class="text-xl font-bold text-gray-900">Histórico Clínico</h2>
+          <p class="text-sm text-gray-500 mt-1">Persistido automaticamente entre consultas</p>
+        </div>
+      </div>
+      <div class="text-xs font-medium px-3 py-1.5 rounded-full bg-amber-50 text-amber-700 border border-amber-100">
+        <span class="flex items-center gap-1.5">
+          <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
+          Auto-salvo
+        </span>
+      </div>
+    </div>
+
+    <div class="space-y-5">
+      <div class="space-y-2">
+        <label class="text-sm font-medium text-gray-700 flex items-center gap-1.5">
+          <svg class="w-4 h-4 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+          </svg>
+          Alergias
+        </label>
+        <input id="alergiasInput" type="text"
+          placeholder="Ex: Dipirona, Penicilina, látex — ou NKDA (sem alergias conhecidas)"
+          class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent transition-all duration-200 bg-white/50"/>
+      </div>
+
+      <div class="space-y-2">
+        <label class="text-sm font-medium text-gray-700 flex items-center gap-1.5">
+          <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/>
+          </svg>
+          Medicações em uso
+        </label>
+        <textarea id="medicacoesUsoInput" rows="3"
+          placeholder="Ex: Metformina 850mg 2x/dia, Losartana 50mg/dia, AAS 100mg/dia"
+          class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent transition-all duration-200 bg-white/50 resize-none"></textarea>
+      </div>
+
+      <div class="space-y-2">
+        <label class="text-sm font-medium text-gray-700 flex items-center gap-1.5">
+          <svg class="w-4 h-4 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+          </svg>
+          Antecedentes pessoais
+        </label>
+        <textarea id="antecedentesInput" rows="3"
+          placeholder="Ex: HAS, DM2 (desde 2015), ex-tabagista (20 anos-maço), colecistectomia (2018). Família: pai IAM precoce"
+          class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent transition-all duration-200 bg-white/50 resize-none"></textarea>
+      </div>
+    </div>
+  </div>
+ 
+  <!-- Ferramentas Rápidas - Card Moderno -->
+  <div class="card-gradient rounded-2xl shadow-xl p-6 border border-gray-100/50 transition-all duration-300 hover:shadow-2xl">
+    <div class="flex items-center justify-between mb-6">
+      <div class="flex items-center gap-3">
+        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-500 to-green-400 flex items-center justify-center shadow-lg">
+          <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+          </svg>
+        </div>
+        <div>
+          <h2 class="text-xl font-bold text-gray-900">Ferramentas Rápidas</h2>
+          <p class="text-sm text-gray-500 mt-1">Acesse medicamentos, exames e orientações pré-configuradas</p>
+        </div>
+      </div>
+      <div class="text-xs font-medium px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-100">
+        <span class="flex items-center gap-1.5">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          Produtividade
+        </span>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+      <button id="btnMedicamentos"
+              class="group flex flex-col items-center justify-center p-5 rounded-xl border-2 border-blue-100 bg-gradient-to-b from-blue-50 to-white hover:from-blue-100 hover:to-blue-50 hover:border-blue-300 transition-all duration-300 hover:scale-105 active:scale-95">
+        <div class="w-14 h-14 rounded-full bg-gradient-to-br from-blue-500 to-cyan-400 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-300 shadow-lg">
+          <span class="text-2xl">💊</span>
+        </div>
+        <span class="font-semibold text-gray-900 text-sm">Medicamentos</span>
+        <span class="text-xs text-gray-500 mt-1">Prescrições</span>
+      </button>
+
+      <button id="btnExameFisico"
+              class="group flex flex-col items-center justify-center p-5 rounded-xl border-2 border-indigo-100 bg-gradient-to-b from-indigo-50 to-white hover:from-indigo-100 hover:to-indigo-50 hover:border-indigo-300 transition-all duration-300 hover:scale-105 active:scale-95">
+        <div class="w-14 h-14 rounded-full bg-gradient-to-br from-indigo-500 to-purple-400 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-300 shadow-lg">
+          <span class="text-2xl">🩺</span>
+        </div>
+        <span class="font-semibold text-gray-900 text-sm">Exame Físico</span>
+        <span class="text-xs text-gray-500 mt-1">Avaliação</span>
+      </button>
+
+      <button id="btnExames"
+              class="group flex flex-col items-center justify-center p-5 rounded-xl border-2 border-violet-100 bg-gradient-to-b from-violet-50 to-white hover:from-violet-100 hover:to-violet-50 hover:border-violet-300 transition-all duration-300 hover:scale-105 active:scale-95">
+        <div class="w-14 h-14 rounded-full bg-gradient-to-br from-violet-500 to-purple-400 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-300 shadow-lg">
+          <span class="text-2xl">🔬</span>
+        </div>
+        <span class="font-semibold text-gray-900 text-sm">Exames</span>
+        <span class="text-xs text-gray-500 mt-1">Complementares</span>
+      </button>
+
+      <button id="btnOrientacoes"
+              class="group flex flex-col items-center justify-center p-5 rounded-xl border-2 border-green-100 bg-gradient-to-b from-green-50 to-white hover:from-green-100 hover:to-green-50 hover:border-green-300 transition-all duration-300 hover:scale-105 active:scale-95">
+        <div class="w-14 h-14 rounded-full bg-gradient-to-br from-green-500 to-emerald-400 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-300 shadow-lg">
+          <span class="text-2xl">📋</span>
+        </div>
+        <span class="font-semibold text-gray-900 text-sm">Orientações</span>
+        <span class="text-xs text-gray-500 mt-1">Alta/Cuidados</span>
+      </button>
+
+      <button id="btnCalculadoras"
+              class="group flex flex-col items-center justify-center p-5 rounded-xl border-2 border-amber-100 bg-gradient-to-b from-amber-50 to-white hover:from-amber-100 hover:to-amber-50 hover:border-amber-300 transition-all duration-300 hover:scale-105 active:scale-95">
+        <div class="w-14 h-14 rounded-full bg-gradient-to-br from-amber-500 to-orange-400 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-300 shadow-lg">
+          <span class="text-2xl">🧮</span>
+        </div>
+        <span class="font-semibold text-gray-900 text-sm">Calculadoras</span>
+        <span class="text-xs text-gray-500 mt-1">Médicas</span>
+      </button>
+    </div>
+
+    <!-- Documentos Clínicos -->
+    <div class="mt-6 pt-4 border-t border-gray-100">
+      <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Documentos Clínicos</p>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+
+        <button id="btnEncaminhamento"
+                class="group flex flex-col items-center justify-center p-4 rounded-xl border-2 border-sky-100 bg-gradient-to-b from-sky-50 to-white hover:from-sky-100 hover:to-sky-50 hover:border-sky-300 transition-all duration-300 hover:scale-105 active:scale-95">
+          <div class="w-12 h-12 rounded-full bg-gradient-to-br from-sky-500 to-blue-400 flex items-center justify-center mb-2 group-hover:scale-110 transition-transform duration-300 shadow-lg">
+            <span class="text-xl">📨</span>
+          </div>
+          <span class="font-semibold text-gray-900 text-xs text-center">Encaminhamento</span>
+          <span class="text-xs text-gray-500 mt-0.5">Referência</span>
+        </button>
+
+        <button id="btnAtestado"
+                class="group flex flex-col items-center justify-center p-4 rounded-xl border-2 border-teal-100 bg-gradient-to-b from-teal-50 to-white hover:from-teal-100 hover:to-teal-50 hover:border-teal-300 transition-all duration-300 hover:scale-105 active:scale-95">
+          <div class="w-12 h-12 rounded-full bg-gradient-to-br from-teal-500 to-green-400 flex items-center justify-center mb-2 group-hover:scale-110 transition-transform duration-300 shadow-lg">
+            <span class="text-xl">📄</span>
+          </div>
+          <span class="font-semibold text-gray-900 text-xs text-center">Atestado</span>
+          <span class="text-xs text-gray-500 mt-0.5">Médico</span>
+        </button>
+
+        <button id="btnReceituario"
+                class="group flex flex-col items-center justify-center p-4 rounded-xl border-2 border-purple-100 bg-gradient-to-b from-purple-50 to-white hover:from-purple-100 hover:to-purple-50 hover:border-purple-300 transition-all duration-300 hover:scale-105 active:scale-95">
+          <div class="w-12 h-12 rounded-full bg-gradient-to-br from-purple-500 to-pink-400 flex items-center justify-center mb-2 group-hover:scale-110 transition-transform duration-300 shadow-lg">
+            <span class="text-xl">💊</span>
+          </div>
+          <span class="font-semibold text-gray-900 text-xs text-center">Receituário</span>
+          <span class="text-xs text-gray-500 mt-0.5">Imprimível</span>
+        </button>
+
+        <button id="btnInterpretador"
+                class="group flex flex-col items-center justify-center p-4 rounded-xl border-2 border-orange-100 bg-gradient-to-b from-orange-50 to-white hover:from-orange-100 hover:to-orange-50 hover:border-orange-300 transition-all duration-300 hover:scale-105 active:scale-95">
+          <div class="w-12 h-12 rounded-full bg-gradient-to-br from-orange-500 to-amber-400 flex items-center justify-center mb-2 group-hover:scale-110 transition-transform duration-300 shadow-lg">
+            <span class="text-xl">🔬</span>
+          </div>
+          <span class="font-semibold text-gray-900 text-xs text-center">Interpretador</span>
+          <span class="text-xs text-gray-500 mt-0.5">de Exames</span>
+        </button>
+
+      </div>
+    </div>
+
+    <!-- Sinais Vitais - Collapsible -->
+    <div class="mt-6 border-t border-gray-100 pt-4">
+      <button id="btnToggleSinaisVitais" type="button"
+              class="flex items-center justify-between w-full px-4 py-3 rounded-xl bg-gradient-to-r from-rose-50 to-pink-50 hover:from-rose-100 hover:to-pink-100 border border-rose-100 transition-all duration-300 group">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-rose-500 to-pink-400 flex items-center justify-center shadow-md">
+            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.5 12h15M12 4.5v15"/>
+            </svg>
+          </div>
+          <div class="text-left">
+            <span class="font-semibold text-gray-900 text-sm">Sinais Vitais</span>
+            <p class="text-xs text-gray-500">PA, FC, FR, Temperatura, SatO2, HGT, Peso, Altura</p>
+          </div>
+        </div>
+        <span id="svToggleIcon" class="text-gray-400 transition-transform duration-300 group-hover:text-gray-600">▲</span>
+      </button>
+
+      <div id="painelSinaisVitais" class="mt-4">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+          <div>
+            <label class="block text-xs font-medium text-gray-600 mb-1">PA (mmHg)</label>
+            <input type="text" id="svPA" inputmode="numeric"
+                   placeholder="120/80"
+                   class="w-full px-3 py-2 rounded-lg border border-gray-200 bg-white text-gray-900 text-sm focus:ring-2 focus:ring-rose-300 focus:border-rose-400 transition-all">
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-gray-600 mb-1">FC (bpm)</label>
+            <input type="number" id="svFC" min="0" max="300"
+                   placeholder="72"
+                   class="w-full px-3 py-2 rounded-lg border border-gray-200 bg-white text-gray-900 text-sm focus:ring-2 focus:ring-rose-300 focus:border-rose-400 transition-all">
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-gray-600 mb-1">FR (irpm)</label>
+            <input type="number" id="svFR" min="0" max="100"
+                   placeholder="16"
+                   class="w-full px-3 py-2 rounded-lg border border-gray-200 bg-white text-gray-900 text-sm focus:ring-2 focus:ring-rose-300 focus:border-rose-400 transition-all">
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-gray-600 mb-1">Temperatura (°C)</label>
+            <input type="number" id="svTemp" min="32" max="43" step="0.1"
+                   placeholder="36.5"
+                   class="w-full px-3 py-2 rounded-lg border border-gray-200 bg-white text-gray-900 text-sm focus:ring-2 focus:ring-rose-300 focus:border-rose-400 transition-all">
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-gray-600 mb-1">SatO₂ (%)</label>
+            <input type="number" id="svSatO2" min="0" max="100"
+                   placeholder="98"
+                   class="w-full px-3 py-2 rounded-lg border border-gray-200 bg-white text-gray-900 text-sm focus:ring-2 focus:ring-rose-300 focus:border-rose-400 transition-all">
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-gray-600 mb-1">HGT (mg/dL)</label>
+            <input type="number" id="svHGT" min="0" max="999"
+                   placeholder="100"
+                   class="w-full px-3 py-2 rounded-lg border border-gray-200 bg-white text-gray-900 text-sm focus:ring-2 focus:ring-rose-300 focus:border-rose-400 transition-all">
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-gray-600 mb-1">Peso (kg)</label>
+            <input type="number" id="svPeso" min="0" max="500" step="0.1"
+                   placeholder="70.0"
+                   class="w-full px-3 py-2 rounded-lg border border-gray-200 bg-white text-gray-900 text-sm focus:ring-2 focus:ring-rose-300 focus:border-rose-400 transition-all">
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-gray-600 mb-1">Altura (m)</label>
+            <input type="number" id="svAltura" min="0" max="2.5" step="0.01"
+                   placeholder="1.70"
+                   class="w-full px-3 py-2 rounded-lg border border-gray-200 bg-white text-gray-900 text-sm focus:ring-2 focus:ring-rose-300 focus:border-rose-400 transition-all">
+          </div>
+          <!-- IMC display (auto-calculated) -->
+          <div class="col-span-2 md:col-span-4 flex items-center gap-2 pt-1">
+            <span class="text-xs text-gray-500">IMC calculado:</span>
+            <span id="svIMCDisplay" class="text-xs text-gray-400">—</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Gerar Prontuário - Card Moderno -->
+  <div class="card-gradient rounded-2xl shadow-xl p-6 border border-gray-100/50 transition-all duration-300 hover:shadow-2xl">
+    <div class="flex items-center justify-between mb-6">
+      <div class="flex items-center gap-3">
+        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-rose-500 to-pink-400 flex items-center justify-center shadow-lg">
+          <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+        </div>
+        <div>
+          <h2 class="text-xl font-bold text-gray-900">Gerar Prontuário</h2>
+          <p class="text-sm text-gray-500 mt-1">Processamento com IA Médica</p>
+        </div>
+      </div>
+      <div class="text-xs font-medium px-3 py-1.5 rounded-full bg-rose-50 text-rose-700 border border-rose-100">
+        <span class="flex items-center gap-1.5">
+          <span class="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse"></span>
+          IA Ativa
+        </span>
+      </div>
+    </div>
+
+    <!-- Status de Geração -->
+    <div id="statusGeracao" class="hidden mb-6">
+      <div class="bg-gradient-to-r from-blue-50 to-cyan-50 border border-blue-100 rounded-xl p-4">
+        <div class="flex items-center justify-between mb-3">
+          <div class="flex items-center gap-3">
+            <div class="dot-pulse w-3 h-3 rounded-full"></div>
+            <span class="font-medium text-blue-800">Gerando prontuário...</span>
+          </div>
+        </div>
+        <div class="w-full bg-blue-100 rounded-full h-2 overflow-hidden">
+          <div id="barraProgresso" class="bar-inner h-full rounded-full" style="width: 0%"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Resultado do Prontuário -->
+    <div class="space-y-4">
+      <div class="flex items-center justify-between">
+        <label class="text-sm font-medium text-gray-700">Prontuário Gerado</label>
+        <div class="flex items-center gap-2">
+          <button id="btnCopiar" class="text-xs px-3 py-1.5 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors">
+            📋 Copiar
+          </button>
+          <button id="btnSalvar" class="text-xs px-3 py-1.5 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors">
+            💾 Salvar
+          </button>
+          <button id="btnResumoPaciente" class="text-xs px-3 py-1.5 rounded-lg border border-indigo-200 text-indigo-700 hover:bg-indigo-50 transition-colors">
+            📝 Resumo p/ Paciente
+          </button>
+        </div>
+      </div>
+      <textarea id="resultadoProntuario" rows="12" placeholder="O prontuário gerado aparecerá aqui..."
+        class="w-full border border-gray-200 rounded-xl px-4 py-4 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-rose-400 focus:border-transparent transition-all duration-200 bg-white/50 resize-none"></textarea>
+    </div>
+
+    <!-- Botões de Ação -->
+    <div class="flex items-center justify-between mt-6 pt-6 border-t border-gray-100">
+      <div class="flex items-center gap-3">
+        <button id="btnLimpar"
+                class="px-5 py-2.5 rounded-xl border-2 border-gray-200 text-gray-700 hover:bg-gray-50 font-medium text-sm flex items-center gap-2 transition-all duration-200 hover:scale-105 active:scale-95">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+          </svg>
+          Limpar Tudo
+        </button>
+        <button id="btnCarregarRascunho"
+                class="px-5 py-2.5 rounded-xl border-2 border-blue-200 text-blue-700 hover:bg-blue-50 font-medium text-sm flex items-center gap-2 transition-all duration-200 hover:scale-105 active:scale-95">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+          </svg>
+          Carregar Rascunho
+        </button>
+      </div>
+      <button id="btnGerarProntuario"
+              class="px-6 py-3 rounded-xl bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white font-semibold text-sm flex items-center gap-2 transition-all duration-200 hover:scale-105 active:scale-95 shadow-lg shadow-rose-500/25">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+        </svg>
+        Gerar Prontuário com IA
+      </button>
+    </div>
+  </div>
+</main>
+
+<!-- Modais -->
+<div id="modalMedicamentos" class="modal fixed inset-0 bg-black bg-opacity-50 items-center justify-center z-50">
+  <div class="modal-content bg-white rounded-xl w-full max-w-2xl max-h-[80vh] overflow-hidden">
+    <!-- Conteúdo do modal será carregado via JS -->
+  </div>
+</div>
+
+<div id="modalExames" class="modal fixed inset-0 bg-black bg-opacity-50 items-center justify-center z-50">
+  <div class="modal-content bg-white rounded-xl w-full max-w-2xl max-h-[80vh] overflow-hidden">
+    <!-- Conteúdo do modal será carregado via JS -->
+  </div>
+</div>
+
+<div id="modalExameFisico" class="modal fixed inset-0 bg-black bg-opacity-50 items-center justify-center z-50">
+  <div class="modal-content bg-white rounded-xl w-full max-w-2xl max-h-[80vh] overflow-hidden">
+    <!-- Conteúdo do modal será carregado via JS -->
+  </div>
+</div>
+
+<div id="modalOrientacoes" class="modal fixed inset-0 bg-black bg-opacity-50 items-center justify-center z-50">
+  <div class="modal-content bg-white rounded-xl w-full max-w-2xl max-h-[80vh] overflow-hidden">
+    <!-- Conteúdo do modal será carregado via JS -->
+  </div>
+</div>
+
+<div id="modalCalculadoras" class="modal fixed inset-0 bg-black bg-opacity-50 items-center justify-center z-50">
+  <div class="modal-content bg-white rounded-xl w-full max-w-2xl max-h-[80vh] overflow-hidden">
+    <!-- Conteúdo do modal será carregado via JS -->
+  </div>
+</div>
+
+<!-- Modal: Encaminhamento -->
+<div id="modalEncaminhamento" class="modal fixed inset-0 bg-black bg-opacity-50 items-center justify-center z-50">
+  <div class="modal-content bg-white rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col">
+    <div class="flex items-center justify-between p-5 border-b border-gray-100">
+      <h3 class="text-lg font-bold text-gray-900">📨 Gerar Encaminhamento</h3>
+      <button onclick="window.UI.fecharModal('modalEncaminhamento')" class="text-gray-400 hover:text-gray-600 text-2xl leading-none">&times;</button>
+    </div>
+    <div class="flex-1 overflow-y-auto p-5 space-y-4">
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Especialidade de destino</label>
+        <select id="encEspecialidade" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400 bg-white">
+          <option value="">Selecione...</option>
+          <option>Cardiologia</option>
+          <option>Neurologia</option>
+          <option>Ortopedia</option>
+          <option>Endocrinologia</option>
+          <option>Gastroenterologia</option>
+          <option>Pneumologia</option>
+          <option>Reumatologia</option>
+          <option>Dermatologia</option>
+          <option>Oftalmologia</option>
+          <option>Otorrinolaringologia</option>
+          <option>Urologia</option>
+          <option>Nefrologia</option>
+          <option>Ginecologia</option>
+          <option>Oncologia</option>
+          <option>Hematologia</option>
+          <option>Infectologia</option>
+          <option>Psiquiatria</option>
+          <option>Médico de Família e Comunidade</option>
+          <option>Cirurgia Geral</option>
+          <option>Vascular</option>
+          <option>Outra especialidade</option>
+        </select>
+      </div>
+      <div id="encOutraEspecialidadeDiv" class="hidden">
+        <label class="block text-sm font-medium text-gray-700 mb-1">Especifique a especialidade</label>
+        <input id="encOutraEspecialidade" type="text" placeholder="Ex: Medicina do Trabalho"
+          class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400"/>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">Urgência</label>
+        <div class="flex gap-3">
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="radio" name="encUrgencia" value="Eletivo" checked class="text-sky-500"/> <span class="text-sm">Eletivo</span>
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="radio" name="encUrgencia" value="Prioritário" class="text-amber-500"/> <span class="text-sm">Prioritário</span>
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="radio" name="encUrgencia" value="Urgência" class="text-red-500"/> <span class="text-sm">Urgência</span>
+          </label>
+        </div>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Informações adicionais <span class="text-gray-400 font-normal">(opcional)</span></label>
+        <textarea id="encNotasAdicionais" rows="3" placeholder="Ex: paciente já realizou ECG há 2 semanas (normal), solicito avaliação de sopro..."
+          class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400 resize-none"></textarea>
+      </div>
+      <!-- Status de geração -->
+      <div id="encStatus" class="hidden bg-sky-50 border border-sky-100 rounded-xl p-3 flex items-center gap-3">
+        <div class="w-4 h-4 rounded-full border-2 border-sky-500 border-t-transparent animate-spin flex-shrink-0"></div>
+        <span class="text-sm text-sky-700">Gerando encaminhamento...</span>
+      </div>
+      <!-- Resultado -->
+      <div id="encResultadoDiv" class="hidden space-y-2">
+        <div class="flex items-center justify-between">
+          <label class="text-sm font-medium text-gray-700">Encaminhamento gerado</label>
+          <button id="encBtnCopiar" class="text-xs px-3 py-1.5 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors">📋 Copiar</button>
+        </div>
+        <textarea id="encResultado" rows="14" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-sky-400 resize-none"></textarea>
+      </div>
+    </div>
+    <div class="p-5 border-t border-gray-100 flex justify-between items-center">
+      <button onclick="window.UI.fecharModal('modalEncaminhamento')"
+        class="px-4 py-2 rounded-xl border border-gray-200 text-gray-600 hover:bg-gray-50 text-sm transition-colors">Fechar</button>
+      <button id="encBtnGerar"
+        class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-sky-500 to-blue-500 hover:from-sky-600 hover:to-blue-600 text-white font-semibold text-sm transition-all duration-200 hover:scale-105 active:scale-95 shadow-lg">
+        ✦ Gerar com IA
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Atestado Médico -->
+<div id="modalAtestado" class="modal fixed inset-0 bg-black bg-opacity-50 items-center justify-center z-50">
+  <div class="modal-content bg-white rounded-2xl w-full max-w-xl max-h-[90vh] overflow-hidden flex flex-col">
+    <div class="flex items-center justify-between p-5 border-b border-gray-100">
+      <h3 class="text-lg font-bold text-gray-900">📄 Atestado Médico</h3>
+      <button onclick="window.UI.fecharModal('modalAtestado')" class="text-gray-400 hover:text-gray-600 text-2xl leading-none">&times;</button>
+    </div>
+    <div class="flex-1 overflow-y-auto p-5 space-y-4">
+
+      <!-- Certificate type -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">Tipo de atestado</label>
+        <div class="flex flex-col gap-2">
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="radio" name="atestTipo" value="proprio" checked class="text-teal-500"/>
+            <span class="text-sm">Afastamento próprio (paciente)</span>
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="radio" name="atestTipo" value="acompanhante" class="text-teal-500"/>
+            <span class="text-sm">Acompanhante</span>
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="radio" name="atestTipo" value="restricao" class="text-teal-500"/>
+            <span class="text-sm">Restrição de atividade física</span>
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="radio" name="atestTipo" value="comparecimento" class="text-teal-500"/>
+            <span class="text-sm">Comparecimento</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Acompanhante: name field -->
+      <div id="atestAcompDiv" class="hidden">
+        <label class="block text-sm font-medium text-gray-700 mb-1">Nome do paciente acompanhado</label>
+        <input id="atestNomePacAcomp" type="text" placeholder="Nome do paciente"
+          class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-teal-400"/>
+      </div>
+
+      <!-- Comparecimento: local / date / time fields -->
+      <div id="atestCompareDiv" class="hidden space-y-3">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Local / instituição</label>
+          <input id="atestCompareLocal" type="text" placeholder="Ex: Hospital de Clínicas de Santa Maria"
+            class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-teal-400"/>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Data</label>
+          <input id="atestCompareData" type="date"
+            class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-teal-400"/>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Horário de chegada</label>
+            <input id="atestCompareChegada" type="time" placeholder="08:00"
+              class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-teal-400"/>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Horário de saída</label>
+            <input id="atestCompareSaida" type="time" placeholder="09:30"
+              class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-teal-400"/>
+          </div>
+        </div>
+      </div>
+
+      <!-- Days -->
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Dias de afastamento</label>
+          <input id="atestDias" type="number" min="1" max="365" value="1"
+            class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-teal-400"/>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">A partir de</label>
+          <input id="atestData" type="date"
+            class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-teal-400"/>
+        </div>
+      </div>
+
+      <!-- CID-10 toggle -->
+      <div class="flex items-center gap-3">
+        <input type="checkbox" id="atestIncluirCID" class="rounded"/>
+        <label for="atestIncluirCID" class="text-sm text-gray-700 cursor-pointer">Incluir CID-10 no atestado</label>
+      </div>
+      <div id="atestCIDDiv" class="hidden">
+        <input id="atestCID" type="text" placeholder="Ex: J06.9 — Infecção aguda das vias aéreas superiores"
+          class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-teal-400"/>
+      </div>
+
+      <!-- Doctor profile -->
+      <div class="p-3 bg-gray-50 rounded-xl border border-gray-100 space-y-2">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-semibold text-gray-600 uppercase tracking-wider">Dados do médico</span>
+          <button id="atestEditarMedico" class="text-xs text-teal-600 hover:underline">Editar</button>
+        </div>
+        <div id="atestPerfilDisplay" class="text-sm text-gray-700"></div>
+        <div id="atestPerfilForm" class="hidden space-y-2">
+          <input id="atestMedNome" type="text" placeholder="Nome completo do médico"
+            class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-teal-400"/>
+          <div class="grid grid-cols-3 gap-2">
+            <input id="atestMedCRM" type="text" placeholder="CRM"
+              class="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-teal-400"/>
+            <select id="atestMedUF" class="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-teal-400">
+              <option value="">UF</option>
+              <option>AC</option><option>AL</option><option>AP</option><option>AM</option>
+              <option>BA</option><option>CE</option><option>DF</option><option>ES</option>
+              <option>GO</option><option>MA</option><option>MT</option><option>MS</option>
+              <option>MG</option><option>PA</option><option>PB</option><option>PR</option>
+              <option>PE</option><option>PI</option><option>RJ</option><option>RN</option>
+              <option>RS</option><option>RO</option><option>RR</option><option>SC</option>
+              <option selected>RS</option><option>SP</option><option>SE</option><option>TO</option>
+            </select>
+            <input id="atestMedEspecialidade" type="text" placeholder="Especialidade"
+              class="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-teal-400"/>
+          </div>
+          <input id="atestMedCidade" type="text" placeholder="Cidade"
+            class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-teal-400"/>
+          <button id="atestSalvarMedico" class="w-full py-2 rounded-lg bg-teal-500 text-white text-sm font-medium hover:bg-teal-600 transition-colors">Salvar dados do médico</button>
+        </div>
+      </div>
+
+      <!-- Result preview -->
+      <div id="atestResultadoDiv" class="hidden space-y-2">
+        <label class="text-sm font-medium text-gray-700">Atestado gerado</label>
+        <textarea id="atestResultado" rows="10" readonly
+          class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm font-mono bg-gray-50 resize-none"></textarea>
+      </div>
+    </div>
+    <div class="p-5 border-t border-gray-100 flex justify-between items-center gap-3">
+      <button onclick="window.UI.fecharModal('modalAtestado')"
+        class="px-4 py-2 rounded-xl border border-gray-200 text-gray-600 hover:bg-gray-50 text-sm">Fechar</button>
+      <div class="flex gap-2">
+        <button id="atestBtnCopiar" class="hidden px-4 py-2 rounded-xl border border-gray-200 text-gray-700 hover:bg-gray-50 text-sm transition-colors">📋 Copiar</button>
+        <button id="atestBtnImprimir" class="hidden px-4 py-2 rounded-xl bg-gray-800 text-white hover:bg-gray-900 text-sm transition-colors">🖨️ Imprimir</button>
+        <button id="atestBtnGerar"
+          class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-teal-500 to-green-500 hover:from-teal-600 hover:to-green-600 text-white font-semibold text-sm transition-all duration-200 hover:scale-105 active:scale-95">
+          ✦ Gerar Atestado
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Receituário -->
+<div id="modalReceituario" class="modal fixed inset-0 bg-black bg-opacity-50 items-center justify-center z-50">
+  <div class="modal-content bg-white rounded-2xl w-full max-w-xl max-h-[90vh] overflow-hidden flex flex-col">
+    <div class="flex items-center justify-between p-5 border-b border-gray-100">
+      <h3 class="text-lg font-bold text-gray-900">💊 Receituário</h3>
+      <button onclick="window.UI.fecharModal('modalReceituario')" class="text-gray-400 hover:text-gray-600 text-2xl leading-none">&times;</button>
+    </div>
+    <div class="flex-1 overflow-y-auto p-5">
+      <div id="recConteudo" class="text-sm text-gray-700 space-y-4"></div>
+    </div>
+    <div class="p-5 border-t border-gray-100 flex justify-between items-center">
+      <button onclick="window.UI.fecharModal('modalReceituario')"
+        class="px-4 py-2 rounded-xl border border-gray-200 text-gray-600 hover:bg-gray-50 text-sm">Fechar</button>
+      <div class="flex gap-2" id="recBotoesAcao">
+        <!-- populated by JS -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Interpretador de Exames -->
+<div id="modalInterpretador" class="modal fixed inset-0 bg-black bg-opacity-50 items-center justify-center z-50">
+  <div class="modal-content bg-white rounded-2xl w-full max-w-2xl max-h-[92vh] overflow-hidden flex flex-col">
+    <div class="flex items-center justify-between p-5 border-b border-gray-100">
+      <h3 class="text-lg font-bold text-gray-900">🔬 Interpretador de Exames</h3>
+      <button onclick="window.UI.fecharModal('modalInterpretador')" class="text-gray-400 hover:text-gray-600 text-2xl leading-none">&times;</button>
+    </div>
+    <div class="flex-1 overflow-y-auto p-5 space-y-4">
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">
+          Cole aqui os resultados de exames
+          <span class="text-gray-400 font-normal ml-1">(laudo, hemograma, bioquímica, imagem...)</span>
+        </label>
+        <textarea id="interpResultados" rows="8"
+          placeholder="Ex:&#10;Hemograma - Hb: 9,2 g/dL (VR: 12–16) | Htc: 28% | Leuc: 11.200 | Plaq: 180.000&#10;Glicemia jejum: 187 mg/dL&#10;TSH: 0,08 mUI/L (VR: 0,4–4,0)&#10;..."
+          class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400 resize-none"></textarea>
+      </div>
+      <!-- Status -->
+      <div id="interpStatus" class="hidden bg-orange-50 border border-orange-100 rounded-xl p-3 flex items-center gap-3">
+        <div class="w-4 h-4 rounded-full border-2 border-orange-500 border-t-transparent animate-spin flex-shrink-0"></div>
+        <span class="text-sm text-orange-700">Interpretando exames...</span>
+      </div>
+      <!-- Result -->
+      <div id="interpResultadoDiv" class="hidden space-y-2">
+        <div class="flex items-center justify-between">
+          <label class="text-sm font-medium text-gray-700">Interpretação clínica</label>
+          <button id="interpBtnCopiar" class="text-xs px-3 py-1.5 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors">📋 Copiar</button>
+        </div>
+        <textarea id="interpResultado" rows="12"
+          class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-orange-400 resize-none bg-orange-50/30"></textarea>
+      </div>
+    </div>
+    <div class="p-5 border-t border-gray-100 flex justify-between items-center">
+      <button onclick="window.UI.fecharModal('modalInterpretador')"
+        class="px-4 py-2 rounded-xl border border-gray-200 text-gray-600 hover:bg-gray-50 text-sm">Fechar</button>
+      <button id="interpBtnGerar"
+        class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-semibold text-sm transition-all duration-200 hover:scale-105 active:scale-95 shadow-lg">
+        ✦ Interpretar
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Resumo para o Paciente -->
+<div id="modalResumoPaciente" class="modal fixed inset-0 bg-black bg-opacity-50 items-center justify-center z-50">
+  <div class="modal-content bg-white rounded-2xl w-full max-w-2xl max-h-[92vh] overflow-hidden flex flex-col">
+    <div class="flex items-center justify-between p-5 border-b border-gray-100">
+      <div>
+        <h3 class="text-lg font-bold text-gray-900">📝 Resumo para o Paciente</h3>
+        <p class="text-xs text-gray-400 mt-0.5">Linguagem simples — para entregar ou enviar ao paciente</p>
+      </div>
+      <button onclick="window.UI.fecharModal('modalResumoPaciente')" class="text-gray-400 hover:text-gray-600 text-2xl leading-none">&times;</button>
+    </div>
+    <div class="flex-1 overflow-y-auto p-5 space-y-4">
+      <!-- Status -->
+      <div id="resumoStatus" class="hidden bg-indigo-50 border border-indigo-100 rounded-xl p-3 flex items-center gap-3">
+        <div class="w-4 h-4 rounded-full border-2 border-indigo-500 border-t-transparent animate-spin flex-shrink-0"></div>
+        <span class="text-sm text-indigo-700">Gerando resumo para o paciente...</span>
+      </div>
+      <!-- Result -->
+      <div id="resumoResultadoDiv" class="space-y-2">
+        <textarea id="resumoResultado" rows="16" readonly
+          class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none bg-indigo-50/20 resize-none leading-relaxed"></textarea>
+      </div>
+    </div>
+    <div class="p-5 border-t border-gray-100 flex justify-between items-center">
+      <button onclick="window.UI.fecharModal('modalResumoPaciente')"
+        class="px-4 py-2 rounded-xl border border-gray-200 text-gray-600 hover:bg-gray-50 text-sm">Fechar</button>
+      <div class="flex gap-2">
+        <button id="resumoBtnCopiar" class="px-4 py-2 rounded-xl border border-gray-200 text-gray-700 hover:bg-gray-50 text-sm transition-colors">📋 Copiar</button>
+        <button id="resumoBtnImprimir" class="px-4 py-2 rounded-xl bg-gray-800 text-white hover:bg-gray-900 text-sm transition-colors">🖨️ Imprimir</button>
+        <button id="resumoBtnGerar"
+          class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-indigo-500 to-violet-500 hover:from-indigo-600 hover:to-violet-600 text-white font-semibold text-sm transition-all duration-200 hover:scale-105 active:scale-95 shadow-lg">
+          ✦ Gerar Resumo
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Painel Lateral para Ferramentas Rápidas -->
+<div id="painelFerramentas" class="fixed top-0 right-0 w-96 h-full bg-white shadow-2xl border-l border-gray-200 transform translate-x-full transition-transform duration-300 z-40 overflow-hidden">
+  <div class="h-full flex flex-col">
+    <!-- Cabeçalho do painel -->
+    <div class="flex items-center justify-between p-4 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-white">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500 to-cyan-400 flex items-center justify-center">
+          <span class="text-xl">🔧</span>
+        </div>
+        <div>
+          <h3 class="font-bold text-gray-900">Ferramentas Rápidas</h3>
+          <p class="text-xs text-gray-500">Detalhes dos elementos selecionados</p>
+        </div>
+      </div>
+      <button id="btnFecharPainel" class="w-8 h-8 rounded-lg hover:bg-gray-100 flex items-center justify-center transition-colors">
+        <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Conteúdo do painel -->
+    <div id="conteudoPainel" class="flex-1 overflow-y-auto p-4">
+      <div class="text-center py-8 text-gray-400">
+        <div class="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-3">
+          <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+          </svg>
+        </div>
+        <p class="text-sm">Clique em qualquer ferramenta para ver os detalhes aqui</p>
+      </div>
+    </div>
+
+    <!-- Rodapé do painel -->
+    <div class="p-4 border-t border-gray-200 bg-gray-50">
+      <div class="text-xs text-gray-500">
+        <p class="font-medium text-gray-700 mb-1">Instruções para o paciente:</p>
+        <p id="instrucoesPaciente" class="text-gray-600">Use esta área para orientar o paciente durante a consulta.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Scripts: ordem correta de dependências -->
+<script src="js/api.js"></script>
+<script src="js/medicamentos.js"></script>
+<script src="js/exame_fisico.js"></script>
+<script src="js/exames_complementares.js"></script>
+<script src="js/orientacoes_alta.js"></script>
+<script src="js/template_engine.js"></script>
+<script src="js/ui-modal-content.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/main.js"></script>
+
+<script>
+  // Inicialização básica - as classes se auto-inicializam
+  document.addEventListener('DOMContentLoaded', function() {
+    console.log('Prontuário IA V2 carregado');
+
+    // Contador de caracteres para Anamnese
+    const anamneseTextarea = document.getElementById('anamnese');
+    const contadorAnamnese = document.getElementById('contadorAnamnese');
+
+    if (anamneseTextarea && contadorAnamnese) {
+      // Atualizar contador inicial
+      contadorAnamnese.textContent = anamneseTextarea.value.length;
+
+      // Atualizar contador enquanto digita
+      anamneseTextarea.addEventListener('input', function() {
+        contadorAnamnese.textContent = this.value.length;
+      });
+    }
+
+    // Painel lateral — gerenciado pelo ui.js (setupPainelFerramentas)
+    // Os botões de ferramentas abrem modais via main.js; não adicionamos listeners duplicados aqui.
+  });
+</script>
+
+</body>
+</html>

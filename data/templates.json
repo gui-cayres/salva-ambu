@@ -1,0 +1,65 @@
+{
+  "consulta_geral": {
+    "nome": "Consulta de Clínica Geral",
+    "especialidade": "clinica_geral",
+    "descricao": "Template geral para consulta de clínica médica",
+    "instrucoes": "Extrair e documentar: data/hora, dados de identificação (nome, idade, sexo, profissão e residência), queixa principal, anamnese (história da doença atual), antecedentes pessoais, achados do exame físico, resultados de exames complementares, hipóteses diagnósticas, plano terapêutico (medicamentos) e orientações que devem ser fornecidas ao paciente. Forneça exatamente 3 hipóteses diagnósticas numeradas, da mais para a menos provável, com justificativa clínica objetiva para cada uma.",
+    "estrutura": "PRONTUÁRIO MÉDICO - CONSULTA DE CLÍNICA GERAL\n\nDATA: {{DATA}}\nHORA: {{HORA}}\n\nIDENTIFICAÇÃO:\nPaciente: {{NOME}}\nIdade: {{IDADE}} anos\nSexo: {{SEXO}}\nProfissão: {{PROFISSÃO}}\nResidência: {{RESIDÊNCIA}}\n\nQUEIXA PRINCIPAL:\n{{QUEIXA}}\n\nHISTÓRIA DA DOENÇA ATUAL:\n{{ANAMNESE}}\n\nANTECEDENTES PESSOAIS:\n{{ANTECEDENTES}}\n\nEXAME FÍSICO:\n{{EXAME_FISICO_GERAL}}\n\nEXAMES COMPLEMENTARES:\n(ver condutas registradas abaixo)\n\nHIPÓTESES DIAGNÓSTICAS:\n{{DIAGNOSTICOS}}\n\nPLANO TERAPÊUTICO:\n(ver condutas registradas abaixo)\n\nORIENTAÇÕES:\n(ver condutas registradas abaixo)"
+  },
+  "retorno_geral": {
+    "nome": "Consulta de Retorno",
+    "especialidade": "clinica_geral",
+    "descricao": "Template para consulta de retorno",
+    "instrucoes": "Avaliar evolução do quadro, resposta ao tratamento, efeitos adversos e ajustar conduta conforme necessário.",
+    "estrutura": "PRONTUÁRIO MÉDICO - CONSULTA DE RETORNO\n\nDATA: {{DATA}}\nHORA: {{HORA}}\n\nIDENTIFICAÇÃO:\nPaciente: {{NOME}}\nIdade: {{IDADE}} anos\nSexo: {{SEXO}}\n\nQUEIXA PRINCIPAL:\n{{QUEIXA}}\n\nEVOLUÇÃO:\n{{ANAMNESE}}\n\nEXAME FÍSICO:\n{{EXAME_FISICO_GERAL}}\n\nEXAMES REALIZADOS:\n(ver condutas registradas abaixo)\n\nAVALIAÇÃO DA RESPOSTA AO TRATAMENTO:\n{{AVALIACAO_TRATAMENTO}}\n\nAJUSTES DE TRATAMENTO:\n(ver condutas registradas abaixo)\n\nORIENTAÇÕES:\n(ver condutas registradas abaixo)"
+  },
+  "atendimento_agudo": {
+    "nome": "Atendimento de Quadro Agudo",
+    "especialidade": "clinica_geral",
+    "descricao": "Template para atendimento de quadros agudos",
+    "instrucoes": "Documentar quadro agudo, exame físico focado, conduta imediata e critérios para acompanhamento. Forneça exatamente 3 hipóteses diagnósticas numeradas, da mais para a menos provável, com justificativa clínica objetiva para cada uma.",
+    "estrutura": "PRONTUÁRIO MÉDICO - ATENDIMENTO DE QUADRO AGUDO\n\nDATA: {{DATA}}\nHORA: {{HORA}}\n\nIDENTIFICAÇÃO:\nPaciente: {{NOME}}\nIdade: {{IDADE}} anos\nSexo: {{SEXO}}\n\nQUEIXA PRINCIPAL:\n{{QUEIXA}}\n\nHISTÓRIA DA DOENÇA ATUAL:\n{{ANAMNESE}}\n\nEXAME FÍSICO:\n{{EXAME_FISICO_GERAL}}\n\nEXAMES COMPLEMENTARES:\n(ver condutas registradas abaixo)\n\nDIAGNÓSTICO PROVISÓRIO:\n{{DIAGNOSTICOS}}\n\nCID-10 sugeridos:\n{{CID_SUGERIDOS}}\n\nCONDUTA IMEDIATA:\n(ver condutas registradas abaixo)\n\nORIENTAÇÕES:\n(ver condutas registradas abaixo)\n\nCRITÉRIOS PARA RETORNO/INTERNAÇÃO:\n{{CRITERIOS_RETORNO}}"
+  },
+  "consulta_cardiologia": {
+    "nome": "Consulta de Cardiologia",
+    "especialidade": "cardiologia",
+    "descricao": "Template para consulta cardiológica",
+    "instrucoes": "Documentar história cardiovascular, fatores de risco, exame cardiovascular específico esperado, exames complementares (caso presente), 2 hipóteses diagnósticas, plano de tratamento detalhado, orientações gerais ao paciente (dieta, atividade física, sinais de alerta). Forneça exatamente 3 hipóteses diagnósticas numeradas, da mais para a menos provável, com justificativa clínica objetiva para cada uma.",
+    "estrutura": "PRONTUÁRIO MÉDICO - CONSULTA DE CARDIOLOGIA\n\nDATA: {{DATA}}\nHORA: {{HORA}}\n\nIDENTIFICAÇÃO:\nPaciente: {{NOME}}\nIdade: {{IDADE}} anos\nSexo: {{SEXO}}\n\nQUEIXA PRINCIPAL:\n{{QUEIXA}}\n\nHISTÓRIA CARDIOVASCULAR:\n{{ANAMNESE}}\n\nFATORES DE RISCO CARDIOVASCULAR:\n{{FATORES_RISCO}}\n\nEXAME CARDIOVASCULAR:\n{{EXAME_CARDIOVASCULAR}}\n\nEXAMES COMPLEMENTARES:\n(ver condutas registradas abaixo)\n\nHIPÓTESES DIAGNÓSTICAS:\n{{DIAGNOSTICOS}}\n\nCID-10 sugeridos:\n{{CID_SUGERIDOS}}\n\nPLANO TERAPÊUTICO:\n(ver condutas registradas abaixo)\n\nORIENTAÇÕES:\n(ver condutas registradas abaixo)"
+  },
+  "consulta_pediatria": {
+    "nome": "Consulta de Pediatria",
+    "especialidade": "pediatria",
+    "descricao": "Template para consulta pediátrica",
+    "instrucoes": "Documentar história perinatal, desenvolvimento, alimentação, exame físico pediátrico, vacinação e orientações. Forneça exatamente 3 hipóteses diagnósticas numeradas, da mais para a menos provável, com justificativa clínica objetiva para cada uma.",
+    "estrutura": "PRONTUÁRIO MÉDICO - CONSULTA DE PEDIATRIA\n\nDATA: {{DATA}}\nHORA: {{HORA}}\n\nIDENTIFICAÇÃO:\nPaciente: {{NOME}}\nIdade: {{IDADE}}\nSexo: {{SEXO}}\nPeso: {{PESO}} kg\nAltura: {{ALTURA}} cm\n\nQUEIXA PRINCIPAL:\n{{QUEIXA}}\n\nHISTÓRIA DA DOENÇA ATUAL:\n{{ANAMNESE}}\n\nHISTÓRIA PERINATAL:\n{{HISTORIA_PERINATAL}}\n\nDESENVOLVIMENTO NEUROPSICOMOTOR:\n{{DESENVOLVIMENTO}}\n\nALIMENTAÇÃO:\n{{ALIMENTACAO}}\n\nVACINAÇÃO:\n{{VACINACAO}}\n\nEXAME FÍSICO PEDIÁTRICO:\n{{EXAME_PEDIATRICO}}\n\nEXAMES COMPLEMENTARES:\n(ver condutas registradas abaixo)\n\nDIAGNÓSTICO:\n{{DIAGNOSTICOS}}\n\nCID-10 sugeridos:\n{{CID_SUGERIDOS}}\n\nPLANO TERAPÊUTICO:\n(ver condutas registradas abaixo)\n\nORIENTAÇÕES:\n(ver condutas registradas abaixo)"
+  },
+  "consulta_ortopedia": {
+    "nome": "Consulta de Ortopedia",
+    "especialidade": "ortopedia",
+    "descricao": "Template para consulta ortopédica",
+    "instrucoes": "Documentar mecanismo de trauma, localização precisa da dor, limitação funcional, exame físico ortopédico específico, exames de imagem e plano de reabilitação. Forneça exatamente 3 hipóteses diagnósticas numeradas, da mais para a menos provável, com justificativa clínica objetiva para cada uma.",
+    "estrutura": "PRONTUÁRIO MÉDICO - CONSULTA DE ORTOPEDIA\n\nDATA: {{DATA}}\nHORA: {{HORA}}\n\nIDENTIFICAÇÃO:\nPaciente: {{NOME}}\nIdade: {{IDADE}} anos\nSexo: {{SEXO}}\nProfissão: {{PROFISSÃO}}\n\nQUEIXA PRINCIPAL:\n{{QUEIXA}}\n\nHISTÓRIA DA DOENÇA ATUAL:\n{{ANAMNESE}}\n\nMECANISMO DE TRAUMA:\n{{MECANISMO_TRAUMA}}\n\nEXAME FÍSICO ORTOPÉDICO:\n{{EXAME_ORTOPEDICO}}\n\nEXAMES DE IMAGEM:\n(ver condutas registradas abaixo)\n\nDIAGNÓSTICO:\n{{DIAGNOSTICOS}}\n\nCID-10 sugeridos:\n{{CID_SUGERIDOS}}\n\nPLANO TERAPÊUTICO:\n(ver condutas registradas abaixo)\n\nORIENTAÇÕES:\n(ver condutas registradas abaixo)"
+  },
+  "retorno_ortopedia": {
+    "nome": "Retorno de Ortopedia",
+    "especialidade": "ortopedia",
+    "descricao": "Template para retorno ortopédico",
+    "instrucoes": "Avaliar evolução da dor, recuperação funcional, resposta ao tratamento, necessidade de ajustes no plano terapêutico e progressão da reabilitação.",
+    "estrutura": "PRONTUÁRIO MÉDICO - RETORNO DE ORTOPEDIA\n\nDATA: {{DATA}}\nHORA: {{HORA}}\n\nIDENTIFICAÇÃO:\nPaciente: {{NOME}}\nIdade: {{IDADE}} anos\nSexo: {{SEXO}}\n\nEVOLUÇÃO:\n{{ANAMNESE}}\n\nEXAME FÍSICO ATUAL:\n{{EXAME_ORTOPEDICO}}\n\nEXAMES REALIZADOS:\n(ver condutas registradas abaixo)\n\nAVALIAÇÃO DA RESPOSTA AO TRATAMENTO:\n{{AVALIACAO_TRATAMENTO}}\n\nAJUSTES DE TRATAMENTO:\n(ver condutas registradas abaixo)\n\nORIENTAÇÕES DE REABILITAÇÃO:\n(ver condutas registradas abaixo)"
+  },
+  "consulta_ginecologia": {
+    "nome": "Consulta de Ginecologia",
+    "especialidade": "ginecologia",
+    "descricao": "Template para consulta ginecológica",
+    "instrucoes": "Documentar história ginecológica, menstrual, obstétrica, métodos contraceptivos, queixas ginecológicas específicas, exame ginecológico e plano terapêutico. Forneça exatamente 3 hipóteses diagnósticas numeradas, da mais para a menos provável, com justificativa clínica objetiva para cada uma.",
+    "estrutura": "PRONTUÁRIO MÉDICO - CONSULTA DE GINECOLOGIA\n\nDATA: {{DATA}}\nHORA: {{HORA}}\n\nIDENTIFICAÇÃO:\nPaciente: {{NOME}}\nIdade: {{IDADE}} anos\nSexo: {{SEXO}}\nEstado Civil: {{ESTADO_CIVIL}}\n\nQUEIXA PRINCIPAL:\n{{QUEIXA}}\n\nHISTÓRIA GINECOLÓGICA:\n{{ANAMNESE}}\n\nHISTÓRIA MENSTRUAL:\n{{HISTORIA_MENSTRUAL}}\n\nHISTÓRIA OBSTÉTRICA:\n{{HISTORIA_OBSTETRICA}}\n\nMÉTODOS CONTRACEPTIVOS:\n{{METODOS_CONTRACEPTIVOS}}\n\nEXAME GINECOLÓGICO:\n{{EXAME_GINECOLOGICO}}\n\nEXAMES COMPLEMENTARES:\n(ver condutas registradas abaixo)\n\nDIAGNÓSTICO:\n{{DIAGNOSTICOS}}\n\nCID-10 sugeridos:\n{{CID_SUGERIDOS}}\n\nPLANO TERAPÊUTICO:\n(ver condutas registradas abaixo)\n\nORIENTAÇÕES:\n(ver condutas registradas abaixo)"
+  },
+  "nota_soap": {
+    "nome": "Nota SOAP",
+    "especialidade": "soap",
+    "descricao": "Template para nota SOAP (Subjective, Objective, Assessment, Plan)",
+    "instrucoes": "Preencher a nota SOAP seguindo a estrutura padrão: Subjetivo (história do paciente), Objetivo (achados do exame físico e exames), Avaliação (diagnóstico/impressão) e Plano (tratamento e acompanhamento). Forneça exatamente 3 hipóteses diagnósticas numeradas, da mais para a menos provável, com justificativa clínica objetiva para cada uma.",
+    "estrutura": "NOTA SOAP - REGISTRO MÉDICO\n\nDATA: {{DATA}}\nHORA: {{HORA}}\n\nIDENTIFICAÇÃO:\nPaciente: {{NOME}}\nIdade: {{IDADE}} anos\nSexo: {{SEXO}}\nProfissão: {{PROFISSÃO}}\nResidência: {{RESIDÊNCIA}}\nPeso: {{PESO}} | Altura: {{ALTURA}}\n\nS (SUBJETIVO):\nQueixa Principal: {{QUEIXA}}\nHistória da Doença Atual:\n{{ANAMNESE}}\n\nAntecedentes Relevantes:\n{{ANTECEDENTES}}\n\nMedicações Atuais:\n{{MEDICAMENTOS_ATUAIS}}\n\nAlergias:\n{{ALERGIAS}}\n\nO (OBJETIVO):\nSinais Vitais:\n{{SINAIS_VITAIS}}\n\nExame Físico:\n{{EXAME_FISICO_GERAL}}\n{{EXAME_FISICO_CARDIOLOGICO}}\n{{EXAME_FISICO_RESPIRATORIO}}\n{{EXAME_FISICO_ABDOMINAL}}\n{{EXAME_FISICO_NEUROLOGICO}}\n{{EXAME_FISICO_EXTREMIDADES}}\n{{EXAME_FISICO_PELE_FANEROS}}\n{{EXAME_FISICO_CABECA_PESCOCO}}\n{{EXAME_FISICO_LINFONODOS}}\n{{EXAME_FISICO_GENITURINARIO}}\n{{EXAME_FISICO_COLUNA}}\n{{EXAME_FISICO_VASCULAR}}\n{{EXAME_FISICO_ESTADO_MENTAL}}\n{{EXAME_FISICO_OSTEOMUSCULAR}}\n\nExames Complementares:\n(ver condutas registradas abaixo)\n\nA (AVALIAÇÃO):\nImpressão/Diagnóstico:\n{{DIAGNOSTICOS}}\n\nCID-10 sugeridos:\n{{CID_SUGERIDOS}}\n\nRaciocínio Clínico:\n{{RACIOCINIO_CLINICO}}\n\nP (PLANO):\nTratamento Medicamentoso:\n(ver condutas registradas abaixo)\n\nOrientações:\n(ver condutas registradas abaixo)\n\nAcompanhamento:\n{{ACOMPANHAMENTO}}\n\nEncaminhamentos:\n{{ENCAMINHAMENTOS}}\n\nAssinatura: ___________________________"
+  }
+}
