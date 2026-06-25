@@ -857,6 +857,22 @@
 <body class="min-h-screen animate-fade-in">
 <div id="printArea" style="display:none"></div>
 
+<script>
+(function() {
+    const isLocal = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+    if (isLocal) return;
+    const TOKEN = 'sallumedicalnetwork';
+    const hash = window.location.hash.slice(1);
+    if (hash !== TOKEN) {
+        document.documentElement.innerHTML = '';
+        document.title = '';
+        history.replaceState(null, '', '/');
+    }
+})();
+</script>
+
+<!-- resto do body -->
+
 <!-- HEADER PROFISSIONAL -->
 <header class="header-gradient text-white shadow-xl sticky top-0 z-50 backdrop-blur-lg bg-opacity-90">
   <div class="max-w-6xl mx-auto px-6 py-4">
