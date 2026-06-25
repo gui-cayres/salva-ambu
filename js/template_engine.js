@@ -25,6 +25,8 @@ const INSTRUCOES_IA = `
 - Para campos de HIPÓTESES DIAGNÓSTICAS, DIAGNÓSTICO, IMPRESSÃO/DIAGNÓSTICO ou equivalentes: escreva SEMPRE exatamente 3 hipóteses numeradas (1. / 2. / 3.) em ordem decrescente de probabilidade clínica. Para cada hipótese: nome da condição, seguido de 1-2 frases de justificativa objetiva baseada nos dados do paciente. Não escreva "Aguardando avaliação" nem deixe em branco.
 - Exemplo de formato correto: "1. Pneumonia adquirida na comunidade — presença de febre, tosse produtiva e crepitações à ausculta. 2. Bronquite aguda — quadro mais leve sem consolidação aparente. 3. Derrame pleural parapneumônico — como complicação a ser descartada."
 - Após preencher o campo de diagnóstico/hipóteses, adicione imediatamente abaixo uma linha com exatamente este formato: "CID-10 sugeridos: X.XX, X.XX, X.XX, X.XX, X.XX" — liste 5 códigos CID-10 em ordem decrescente de probabilidade, separados por vírgula, sem descrições, sem parênteses, apenas os códigos alfanuméricos padrão.
+- Se sinais vitais foram fornecidos, mencione os alterados de forma clínica na narrativa (ex: "ao exame, apresentava-se hipertenso com PA de 160/100 mmHg", "taquicárdico com FC de 112 bpm"). Não liste os sinais vitais como tópicos no Subjetivo — integre-os na narrativa.
+- Se IMC foi calculado, cite-o clinicamente quando relevante (ex: "paciente com sobrepeso, IMC 28,3 kg/m²").
 `.trim();
 
 window.InstrucoesIA = INSTRUCOES_IA;
@@ -138,8 +140,43 @@ class TemplateEngine {
             hgt:         dados.svHGT    ? `${dados.svHGT} mg/dL`  : ''
         };
 
+        // Compact identification line
+        const profissaoLower = (dados.profissao || '').toLowerCase();
+        const sexoAbrev = /^m/i.test(dados.sexo || '') ? 'M' : /^f/i.test(dados.sexo || '') ? 'F' : (dados.sexo || '');
+        const idPartes = [
+            dados.nome || null,
+            dados.idade ? `${dados.idade} anos` : null,
+            profissaoLower || null,
+            sexoAbrev ? `(${sexoAbrev})` : null,
+            dados.naturalidade ? `— ${dados.naturalidade}` : null
+        ].filter(Boolean);
+        variaveis.identificacao = idPartes.length > 0 ? idPartes.join(', ') : '[Paciente não identificado]';
+
+        // Compact vital signs line
+        const vsPartes = [];
+        if (dados.svPA)    vsPartes.push(`PA: ${dados.svPA} mmHg`);
+        if (dados.svFC)    vsPartes.push(`FC: ${dados.svFC} bpm`);
+        if (dados.svFR)    vsPartes.push(`FR: ${dados.svFR} irpm`);
+        if (dados.svTemp)  vsPartes.push(`T: ${dados.svTemp} °C`);
+        if (dados.svSatO2) vsPartes.push(`SatO2: ${dados.svSatO2}%`);
+        if (dados.svHGT)   vsPartes.push(`HGT: ${dados.svHGT} mg/dL`);
+        variaveis.sinaisVitaisLinha = vsPartes.length > 0 ? vsPartes.join(' | ') : 'Não aferidos.';
+
+        // Compact anthropometry line with auto-calculated BMI
+        const antropPartes = [];
+        if (dados.svPeso)   antropPartes.push(`Peso: ${dados.svPeso} kg`);
+        if (dados.svAltura) antropPartes.push(`Altura: ${dados.svAltura} m`);
+        const pesoN = parseFloat(dados.svPeso), altN = parseFloat(dados.svAltura);
+        if (pesoN > 0 && altN > 0) {
+            antropPartes.push(`IMC: ${(pesoN / (altN * altN)).toFixed(1)} kg/m²`);
+        }
+        variaveis.antropometria = antropPartes.length > 0 ? antropPartes.join(' | ') : 'Não informado.';
+
         // Substituir variáveis no template (incluindo versões com acentos)
         const substituicoes = [
+            { placeholder: '{{IDENTIFICACAO}}',      value: variaveis.identificacao      },
+            { placeholder: '{{SINAIS_VITAIS_LINHA}}', value: variaveis.sinaisVitaisLinha  },
+            { placeholder: '{{ANTROPOMETRIA}}',       value: variaveis.antropometria       },
             { placeholder: '{{NOME}}', value: variaveis.nome },
             { placeholder: '{{IDADE}}', value: variaveis.idade },
             { placeholder: '{{SEXO}}', value: variaveis.sexo },
@@ -401,6 +438,31 @@ class TemplateEngine {
 
         let prompt = `Com base nas informações abaixo, preencha o template de prontuário médico:\n\n`;
         prompt += `PACIENTE: ${dados.nome || '[NOME]'}, ${dados.idade || '[IDADE]'}, ${dados.sexo || '[SEXO]'}\n`;
+
+        // Build compact vitals string for AI context
+        const vsCtx = [];
+        if (dados.svPA)    vsCtx.push(`PA ${dados.svPA} mmHg`);
+        if (dados.svFC)    vsCtx.push(`FC ${dados.svFC} bpm`);
+        if (dados.svFR)    vsCtx.push(`FR ${dados.svFR} irpm`);
+        if (dados.svTemp)  vsCtx.push(`T ${dados.svTemp} °C`);
+        if (dados.svSatO2) vsCtx.push(`SatO2 ${dados.svSatO2}%`);
+        if (dados.svHGT)   vsCtx.push(`HGT ${dados.svHGT} mg/dL`);
+        if (vsCtx.length > 0) {
+            prompt += `SINAIS VITAIS: ${vsCtx.join(' | ')}\n`;
+        }
+
+        // Build compact anthropometry string with auto BMI
+        const antropCtx = [];
+        if (dados.svPeso)   antropCtx.push(`Peso ${dados.svPeso} kg`);
+        if (dados.svAltura) antropCtx.push(`Altura ${dados.svAltura} m`);
+        const pesoN = parseFloat(dados.svPeso), altN = parseFloat(dados.svAltura);
+        if (pesoN > 0 && altN > 0) {
+            antropCtx.push(`IMC ${(pesoN / (altN * altN)).toFixed(1)} kg/m²`);
+        }
+        if (antropCtx.length > 0) {
+            prompt += `ANTROPOMETRIA: ${antropCtx.join(' | ')}\n`;
+        }
+
         prompt += `QUEIXA PRINCIPAL: ${dados.queixa || '[QUEIXA PRINCIPAL]'}\n`;
         prompt += `ANAMNESE (use esta informação para preencher o Subjetivo/História da Doença Atual):\n${dados.anamnese || '[ANAMNESE]'}\n\n`;
 

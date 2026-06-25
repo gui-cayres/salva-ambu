@@ -33,6 +33,9 @@ class ProntuarioApp {
 
         // Configurar modo escuro
         this.setupDarkMode();
+
+        // Verificar perfil médico (boas-vindas ou saudação)
+        this._verificarPerfilMedico();
     }
 
     /**
@@ -129,6 +132,21 @@ class ProntuarioApp {
         const btnDarkMode = document.getElementById('btnDarkMode');
         if (btnDarkMode) {
             btnDarkMode.addEventListener('click', () => this.toggleDarkMode());
+        }
+
+        const btnMeuPerfil = document.getElementById('btnMeuPerfil');
+        if (btnMeuPerfil) {
+            btnMeuPerfil.addEventListener('click', () => {
+                const perfil = this._carregarPerfilMedico();
+                if (perfil.nome) {
+                    document.getElementById('bvNome').value = perfil.nome;
+                    document.getElementById('bvCRM').value = perfil.crm || '';
+                    document.getElementById('bvUF').value = perfil.uf || '';
+                    document.getElementById('bvEspecialidade').value = perfil.especialidade || '';
+                    document.getElementById('bvCidade').value = perfil.cidade || '';
+                }
+                if (window.UI) window.UI.abrirModal('modalBoasVindas');
+            });
         }
 
         // Especialidade change
@@ -1673,6 +1691,50 @@ class ProntuarioApp {
             if (statusEl) statusEl.classList.add('hidden');
             if (btnGerar) { btnGerar.disabled = false; btnGerar.textContent = '✦ Interpretar'; }
         }
+    }
+
+    _verificarPerfilMedico() {
+        const perfil = this._carregarPerfilMedico();
+        if (!perfil.nome) {
+            this._abrirModalBoasVindas();
+        } else {
+            this._aplicarSaudacao(perfil);
+        }
+    }
+
+    _abrirModalBoasVindas() {
+        if (window.UI) window.UI.abrirModal('modalBoasVindas');
+
+        document.getElementById('bvBtnPular')?.addEventListener('click', () => {
+            if (window.UI) window.UI.fecharModal('modalBoasVindas');
+        });
+
+        document.getElementById('bvBtnSalvar')?.addEventListener('click', () => {
+            const nome = document.getElementById('bvNome')?.value.trim();
+            if (!nome) {
+                alert('Informe ao menos seu nome para continuar.');
+                return;
+            }
+            const perfil = {
+                nome,
+                crm: document.getElementById('bvCRM')?.value.trim() || '',
+                uf: document.getElementById('bvUF')?.value || '',
+                especialidade: document.getElementById('bvEspecialidade')?.value.trim() || '',
+                cidade: document.getElementById('bvCidade')?.value.trim() || '',
+            };
+            localStorage.setItem('doctor_profile', JSON.stringify(perfil));
+            if (window.UI) window.UI.fecharModal('modalBoasVindas');
+            this._aplicarSaudacao(perfil);
+        });
+    }
+
+    _aplicarSaudacao(perfil) {
+        const subtitles = document.querySelectorAll('header p, header span');
+        subtitles.forEach(el => {
+            if (el.textContent.includes('Prontuário') || el.textContent.includes('prontuário')) {
+                el.textContent = `Olá, Dr(a). ${perfil.nome}${perfil.especialidade ? ' · ' + perfil.especialidade : ''}`;
+            }
+        });
     }
 }
 
